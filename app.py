@@ -1,11 +1,19 @@
+import streamlit as st
+import numpy as np
+import pickle
+
+# Load the trained model
+with open('titanic_model.pkl', 'rb') as file:
+    model = pickle.load(file)
+
 st.title("Titanic Survival Prediction")
 
 def predict_survival(Pclass, Sex, Age, SibSp, Parch, Fare, Embarked):
     input_data = np.array([[Pclass, Sex, Age, SibSp, Parch, Fare, Embarked]])
-    input_data = scaler.transform(input_data)
     prediction = model.predict(input_data)
     return "Survived" if prediction[0] == 1 else "Not Survived"
 
+# User input fields
 Pclass = st.selectbox("Passenger Class", [1, 2, 3])
 Sex = st.radio("Sex", ["Male", "Female"])
 Sex = 1 if Sex == "Male" else 0
@@ -19,3 +27,5 @@ Embarked = 0 if Embarked == "C" else 1 if Embarked == "Q" else 2
 if st.button("Predict Survival"):
     result = predict_survival(Pclass, Sex, Age, SibSp, Parch, Fare, Embarked)
     st.success(f"Prediction: {result}")
+
+
